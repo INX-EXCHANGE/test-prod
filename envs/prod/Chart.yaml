@@ -1,0 +1,7 @@
+apiVersion: v2
+name: QA1
+description: QA1
+type: application
+
+version: v1.2.0
+appVersion: v1.2.0
