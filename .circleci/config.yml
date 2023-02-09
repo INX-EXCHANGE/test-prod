@@ -1,0 +1,25 @@
+version: 2.1
+orbs:
+  gh: circleci/github-cli@2.0
+parameters:
+  src:
+    type: string
+    default: "prod"    
+  dst:
+    type: string
+    default: "prod"
+
+jobs:
+  sync:
+    docker:
+      - image: cimg/base:2023.02
+    steps:
+      - when:
+          condition:
+            not:
+              equal: [ << pipeline.parameters.src >>, << pipeline.parameters.dst >> ]
+          steps:
+            - checkout          
+      - run: 
+          name: Sync information
+          command: "echo Sync from << pipeline.parameters.src >> to << pipeline.parameters.dst >>"
