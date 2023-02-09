@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-secret
+  namespace: default
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: awscli
+          image: amazon/aws-cli:2.9.20
+          command: ["/bin/sh", "-c", 'if [[ $(aws secretsmanager list-secrets --include-planned-deletion --filter Key="tag-value",Values="$ENV" | wc -l) -le 4 ]]; then aws secretsmanager create-secret --name $ENV --description "Dynamic secret for $ENV environment" --tags "[{\"Key\":\"Environment\",\"Value\":\"$ENV\"}]" --secret-string "{\"access_key\":\"\",\"app_aes_passphrase\":\"\",\"bitgo_token\":\"\",\"cloud_auth\":\"\",\"cloud_id\":\"\",\"jwt_secret\":\"\",\"mailgun_key\":\"\",\"mongodb_url\":\"\",\"secret_key\":\"\",\"talon_one_apikey\":\"\",\"wallet_passphrase\":\"\",\"bitgo_token_backoffice_server\":\"\",\"app_encryption_secret\":\"\",\"infura_private_key\":\"\",\"infura_project_id\":\"\",\"synapse_client_id\":\"\",\"synapse_client_secret\":\"\",\"tokensoft_api_key\":\"\",\"tokensoft_api_secret\":\"\",\"invest_jwtSecret\":\"\",\"walletConnectInfuraId\":\"\",\"atlasPublicKey\":\"\",\"atlasPrivateKey\":\"\",\"onfido_api_key\":\"\",\"sardine_authentication\":\"\",\"sardine_client_id\":\"\",\"securitize_api_key\":\"\",\"securitize_domain_id\":\"\"}"; fi ']
+          env:
+            - name: AWS_DEFAULT_REGION
+              value: us-west-2
+            - name: ENV
+              value: {{ .Values.environment }}
