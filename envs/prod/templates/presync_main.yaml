@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: presync-main
+  namespace: default
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    argocd.argoproj.io/sync-wave: "-5"    
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: awscli
+          image: amazon/aws-cli:2.9.20
+          command: ["/bin/sh", "-c", 'sleep 10']
+          env:
+            - name: AWS_DEFAULT_REGION
+              value: us-west-2
+            - name: ENV
+              value: {{ .Values.environment }}
