@@ -23,3 +23,13 @@ jobs:
       - run: 
           name: Sync information
           command: "echo Sync from << pipeline.parameters.src >> to << pipeline.parameters.dst >>"
+          
+workflows:
+  version: 2.1
+  sync-folders:
+    jobs:
+      - sync:
+          context: inx
+          filters:
+            tags:
+              ignore: /.*/
