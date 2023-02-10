@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: nginx:{{ .Values.image_tag_frontend }}
+        ports:
+        - containerPort: {{ .Values.service.frontend.port }}
+        resources:
+          {{- toYaml .Values.resources.frontend | nindent 12 }}

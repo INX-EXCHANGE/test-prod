@@ -1,0 +1,18 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: slack-token
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "-15"    
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    name: aws-secretstore-cross-account
+    kind: ClusterSecretStore
+  target:
+    name: slack-test
+    creationPolicy: Owner
+  dataFrom:
+    - extract:
+        key: slack-test
