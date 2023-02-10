@@ -1,0 +1,34 @@
+environment: ""
+#Application image tags
+image_tag_backend: "1.18.0"
+image_tag_frontend: "1.14.2"
+#Global
+image:
+  account_id: "541756307328"
+  ecr_region: "us-west-2"
+  pullPolicy: Always
+
+service:
+  frontend:
+    type: ClusterIP
+    port: 80
+  backend:
+    type: NodePort
+    port: 80
+
+    
+resources:
+  frontend:
+    limits:
+      cpu: 50m
+      memory: 50Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
+  backend:
+    limits:
+      cpu: 50m
+      memory: 50Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
