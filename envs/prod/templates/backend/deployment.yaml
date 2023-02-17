@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      tier: backend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        tier: backend
+    spec:
+      containers:
+        - name: backend
+          image: nginx:{{ .Values.image_tag_backend }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.backend.port }}
+          resources:
+            {{- toYaml .Values.resources.backend | nindent 12 }}

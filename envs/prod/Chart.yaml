@@ -1,0 +1,7 @@
+apiVersion: v2
+name: PROD
+description: PROD deployment
+type: application
+
+version: 2.5
+appVersion: 2.5

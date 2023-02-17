@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: presync-main
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    argocd.argoproj.io/sync-wave: "-5"    
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      containers:
+      - name: slack-notification
+        image: amazon/aws-cli:2.9.20
+        command: ["/bin/sh", "-c", 'curl -X POST --data-urlencode payload="{\"text\": \"App Sync started on $ENV environment. Test message\"}" $SLACK']
+        env:
+          - name: SLACK
+            valueFrom:
+              secretKeyRef:
+                name: slack-test
+                key: url 
+          - name: ENV
+            value: {{ .Values.environment }}                
+      restartPolicy: Never
+  backoffLimit: 2
